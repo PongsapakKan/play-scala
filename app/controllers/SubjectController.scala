@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import Repositories.{SubjectRepository, SubjectRepositoryImpl}
-import models.SubjectInputForm
+import models.{SubjectInputForm, WorkStatusInput}
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
@@ -12,7 +12,6 @@ import play.api.data.Forms._
 /**
   * Created by LenovoPC on 2017/06/13.
   */
-case class WorkStatusInput(status: Byte)
 
 
 class SubjectController @Inject() (subjectRepository: SubjectRepository) extends Controller {
@@ -47,7 +46,7 @@ class SubjectController @Inject() (subjectRepository: SubjectRepository) extends
     val inputSubject = subjectForm.bindFromRequest.get
     val updatedSubject = subjectRepository.update(id, inputSubject)
 
-    if (!updatedSubject.isDefined)
+    if (updatedSubject == null)
       NotFound
     else
       Ok(Json.toJson(updatedSubject))
@@ -63,16 +62,17 @@ class SubjectController @Inject() (subjectRepository: SubjectRepository) extends
     val inputSubject = statusForm.bindFromRequest.get
     val updatedSubject = subjectRepository.updateStatus(id, inputSubject)
 
-    if (!updatedSubject.isDefined)
+    if (updatedSubject == null)
       NotFound
     else
       Ok(Json.toJson(updatedSubject))
   }
 
   def deleteSubject(id: Int) = Action { implicit request =>
-    if (!subjectRepository.delete(id))
+    val deleteSubject = subjectRepository.delete(id)
+    if (!deleteSubject.isDefined)
       NotFound
     else
-      Accepted
+      Ok(Json.toJson(deleteSubject))
   }
 }

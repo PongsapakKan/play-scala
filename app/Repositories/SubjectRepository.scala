@@ -4,9 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 import com.google.inject.ImplementedBy
-import controllers.WorkStatusInput
 import models.WorkStatus.WorkStatus
-import models.{Subject, SubjectInputForm, WorkStatus}
+import models.{Subject, SubjectInputForm, WorkStatus, WorkStatusInput}
 
 import scala.collection.mutable
 
@@ -25,14 +24,14 @@ trait SubjectRepository {
 
   def updateStatus(id: Int, status: WorkStatusInput): Option[Subject]
 
-  def delete(id: Int): Boolean
+  def delete(id: Int): Option[Subject]
 }
 
 class SubjectRepositoryImpl @Inject() extends SubjectRepository {
 
   private var subject: mutable.MutableList[Subject] = mutable.MutableList(
         Subject(1, "Subject1", "FreeText1", WorkStatus.Pending),
-        Subject(2, "Subject1", "FreeText1", WorkStatus.Done)
+        Subject(2, "Subject2", "FreeText2", WorkStatus.Done)
       )
 
   private val atomicNum = new AtomicInteger(2)
@@ -74,14 +73,13 @@ class SubjectRepositoryImpl @Inject() extends SubjectRepository {
     this.subject.get(index)
   }
 
-  override def delete(id: Int): Boolean = {
-    val index = this.subject.indexWhere(s => s.id == id)
+  override def delete(id: Int): Option[Subject] = {
+    val deletedSubject = this.subject.find(s => s.id == id)
 
-    if (index < 0)
-      return false
+    if (deletedSubject.isDefined)
+       this.subject = this.subject.filterNot(s => s.id == id)
 
-    this.subject = this.subject.filterNot(s => s.id == id)
-    true
+    deletedSubject
   }
 
   private def getStatus(status: Byte): WorkStatus = {

@@ -30,3 +30,4 @@ object Subject {
 
 case class SubjectInputForm(name: String, content: String, status: Byte)
 
+case class WorkStatusInput(status: Byte)

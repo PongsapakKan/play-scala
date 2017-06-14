@@ -9,8 +9,8 @@ GET     /                           controllers.HomeController.index
 GET     /subject                      controllers.SubjectController.getSubjects
 GET     /subject/:id                  controllers.SubjectController.getSubjectById(id: Int)
 POST    /subject                      controllers.SubjectController.createSubject
-PUT     /subject/:ide                 controllers.SubjectController.updateSubject(ide: Int)
-PUT     /subject/:id/status           controllers.SubjectController.updateStatus(id: Int)
+PUT     /subject/:id                  controllers.SubjectController.updateSubject(id: Int)
+PATCH   /subject/:id                  controllers.SubjectController.updateStatus(id: Int)
 DELETE  /subject/:id                  controllers.SubjectController.deleteSubject(id :Int)
 
 # Map static resources from the /public folder to the /assets URL path
