@@ -1,24 +1,26 @@
-# Running
+# Play-Scala
+
+## Running
 
 ```
 sbt run
 ```
 
-# Testing
+## Testing
 
 ```
 sbt test
 ```
 
-# Usage
+## Usage
 
-Get all data
+#### Get all data
 
 ```
 curl -X GET http://localhost:9000/subject
 ```
 
-Get data by id
+#### Get data by id
 
 replace id by number
 
