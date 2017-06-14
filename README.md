@@ -1,1 +1,5 @@
-# play-scala
+# Running
+
+```
+sbt run
+```
