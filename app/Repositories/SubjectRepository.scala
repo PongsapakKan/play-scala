@@ -30,8 +30,8 @@ trait SubjectRepository {
 class SubjectRepositoryImpl @Inject() extends SubjectRepository {
 
   private var subject: mutable.MutableList[Subject] = mutable.MutableList(
-        Subject(1, "Subject1", "FreeText1", WorkStatus.Pending),
-        Subject(2, "Subject2", "FreeText2", WorkStatus.Done)
+        Subject(1, "Subject1", "Free text 1", WorkStatus.Pending),
+        Subject(2, "Subject2", "Free text 2", WorkStatus.Done)
       )
 
   private val atomicNum = new AtomicInteger(2)

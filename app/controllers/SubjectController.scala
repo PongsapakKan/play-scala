@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import Repositories.{SubjectRepository, SubjectRepositoryImpl}
+import Repositories.SubjectRepository
 import models.{SubjectInputForm, WorkStatusInput}
 import play.api.data.Form
 import play.api.libs.json.Json
@@ -38,18 +38,26 @@ class SubjectController @Inject() (subjectRepository: SubjectRepository) extends
   }
 
   def createSubject = Action { implicit request =>
-    val inputSubject = subjectForm.bindFromRequest.get
-    Created(Json.toJson(subjectRepository.create(inputSubject)))
+    if (subjectForm.bindFromRequest.hasErrors){
+      BadRequest("Invalid data")
+    } else {
+      val inputSubject = subjectForm.bindFromRequest.get
+      Created(Json.toJson(subjectRepository.create(inputSubject)))
+    }
   }
 
   def updateSubject(id: Int) = Action { implicit request =>
-    val inputSubject = subjectForm.bindFromRequest.get
-    val updatedSubject = subjectRepository.update(id, inputSubject)
+    if (subjectForm.bindFromRequest.hasErrors) {
+      BadRequest("Invalid data")
+    } else {
+      val inputSubject = subjectForm.bindFromRequest.get
+      val updatedSubject = subjectRepository.update(id, inputSubject)
 
-    if (updatedSubject == null)
-      NotFound
-    else
-      Ok(Json.toJson(updatedSubject))
+      if (updatedSubject == null)
+        NotFound
+      else
+        Ok(Json.toJson(updatedSubject))
+    }
   }
 
   val statusForm: Form[WorkStatusInput] = Form {
@@ -59,13 +67,17 @@ class SubjectController @Inject() (subjectRepository: SubjectRepository) extends
   }
 
   def updateStatus(id: Int) = Action { implicit request =>
-    val inputSubject = statusForm.bindFromRequest.get
-    val updatedSubject = subjectRepository.updateStatus(id, inputSubject)
+    if (statusForm.bindFromRequest.hasErrors) {
+      BadRequest("Invalid status")
+    } else {
+      val inputSubject = statusForm.bindFromRequest.get
+      val updatedSubject = subjectRepository.updateStatus(id, inputSubject)
 
-    if (updatedSubject == null)
-      NotFound
-    else
-      Ok(Json.toJson(updatedSubject))
+      if (updatedSubject == null)
+        NotFound
+      else
+        Ok(Json.toJson(updatedSubject))
+    }
   }
 
   def deleteSubject(id: Int) = Action { implicit request =>
@@ -73,6 +85,6 @@ class SubjectController @Inject() (subjectRepository: SubjectRepository) extends
     if (!deleteSubject.isDefined)
       NotFound
     else
-      Ok(Json.toJson(deleteSubject))
+      Ok("Subject was delete")
   }
 }
